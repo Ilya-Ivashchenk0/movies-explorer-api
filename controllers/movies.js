@@ -13,10 +13,11 @@ module.exports.postNewMovie = (req, res, next) => {
     description,
     image,
     trailer,
-    nameRU,
-    nameEN,
     thumbnail,
-    movieId
+    owner,
+    movieId,
+    nameRU,
+    nameEN
   } = req.body
 
   Movie.create({
@@ -28,6 +29,7 @@ module.exports.postNewMovie = (req, res, next) => {
     image,
     trailer,
     thumbnail,
+    owner,
     movieId,
     nameRU,
     nameEN
