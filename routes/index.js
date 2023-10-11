@@ -8,6 +8,7 @@ router.post('/signin', login)
 router.use(auth)
 
 router.use('/logout', logout)
+
 router.use('/users', require('./users'))
 router.use('/movies', require('./movies'))
 
