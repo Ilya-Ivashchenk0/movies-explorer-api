@@ -3,7 +3,6 @@ const { celebrate, Joi, Segments } = require('celebrate')
 const validateUser = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().min(2).max(30),
-    password: Joi.string().required().min(8),
     name: Joi.string().required().min(2).max(30)
   })
 })
@@ -13,7 +12,7 @@ const validateNewMovie = celebrate({
     country: Joi.string().required(),
     director: Joi.string().required(),
     duration: Joi.number().required(),
-    year: Joi.number().required(),
+    year: Joi.string().required(),
     description: Joi.string().required(),
     image: Joi.string().uri().required(),
     trailerLink: Joi.string().uri().required(),
@@ -33,12 +32,12 @@ const validateLogin = celebrate({
 
 const validateMovieId = celebrate({
   [Segments.PARAMS]: Joi.object().keys({
-    _id: Joi.string().hex().length(24).required()
+    movieId: Joi.string().hex().length(24).required()
   })
 })
 
-const validatUserInfo = celebrate({
-  [Segments.PARAMS]: Joi.object().keys({
+const validateUserInfo = celebrate({
+  body: Joi.object().keys({
     userId: Joi.string().hex().length(24).required()
   })
 })
@@ -48,5 +47,5 @@ module.exports = {
   validateNewMovie,
   validateLogin,
   validateMovieId,
-  validatUserInfo
+  validateUserInfo
 }

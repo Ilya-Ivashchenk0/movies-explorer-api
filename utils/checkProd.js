@@ -5,4 +5,14 @@ const baseUrl = () => {
   return 'https://api.ilya-mesto.nomoredomainsrocks.ru'
 }
 
-module.exports = baseUrl()
+const dbUrl = () => {
+  if (process.env.NODE_ENV !== 'production') {
+    return 'mongodb://localhost:27017/bitfilmsdb'
+  }
+  return process.env.DB_URL
+}
+
+module.exports = {
+  baseUrl: baseUrl(),
+  dbUrl: dbUrl()
+}

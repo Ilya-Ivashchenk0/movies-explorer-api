@@ -12,6 +12,7 @@ module.exports.getAllMovies = (req, res, next) => {
 }
 
 module.exports.postNewMovie = (req, res, next) => {
+  const ownerId = req.user._id
   const {
     country,
     director,
@@ -19,9 +20,8 @@ module.exports.postNewMovie = (req, res, next) => {
     year,
     description,
     image,
-    trailer,
+    trailerLink,
     thumbnail,
-    owner,
     movieId,
     nameRU,
     nameEN
@@ -34,9 +34,9 @@ module.exports.postNewMovie = (req, res, next) => {
     year,
     description,
     image,
-    trailer,
+    trailerLink,
     thumbnail,
-    owner,
+    owner: ownerId,
     movieId,
     nameRU,
     nameEN
@@ -52,15 +52,16 @@ module.exports.deleteMovieById = (req, res, next) => {
   Movie.findById(movieId)
     .then((movie) => {
       if (!movie) {
-        return next(new LostMovieError(lostMovieMessage))
+        throw new LostMovieError(lostMovieMessage)
       }
 
-      if (movie.owner !== userId) {
-        return next(new DeleteMovieError(deleteErrorMessage))
+      if (movie.owner.toString() !== userId) {
+        throw new DeleteMovieError(deleteErrorMessage)
       }
 
-      return Movie.findByIdAndDelete(movieId)
+      Movie.findByIdAndDelete(movieId)
+        .then(() => res.send({ message: deletedMovieMessage }))
+        .catch((err) => next(err))
     })
-    .then(() => res.send({ message: deletedMovieMessage }))
     .catch((err) => next(err))
 }

@@ -18,7 +18,7 @@ module.exports.getUserInfo = (req, res, next) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        return next(new MissUserError(missUserErrorMessage))
+        throw new MissUserError(missUserErrorMessage)
       }
       return res.status(200).send({ data: user })
     })
@@ -45,7 +45,7 @@ module.exports.register = (req, res, next) => {
   } = req.body
 
   if (!email && !password) {
-    return next(new UserDataError(userDataErrorMessage))
+    throw new UserDataError(userDataErrorMessage)
   }
 
   return bcrypt.hash(password, 10)
@@ -68,13 +68,13 @@ module.exports.login = (req, res, next) => {
   return User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return next(new MissDataError(missDataErrorMessage))
+        throw new MissDataError(missDataErrorMessage)
       }
 
       return bcrypt.compare(password, user.password)
         .then((check) => {
           if (!check) {
-            return next(new UserDataError(userDataErrorMessage))
+            throw new UserDataError(userDataErrorMessage)
           }
           const token = jwt.sign(
             { _id: user._id },
