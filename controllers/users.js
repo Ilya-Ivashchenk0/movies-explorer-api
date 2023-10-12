@@ -1,15 +1,24 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const UserDataError = require('../errors/user-data-error')
+const MissDataError = require('../errors/miss-data-error')
+const MissUserError = require('../errors/miss-user-error')
+const {
+  userDataErrorMessage,
+  loginSuccessfulMessage,
+  missDataErrorMessage,
+  missUserErrorMessage,
+  logoutMessage
+} = require('../utils/constsMessages')
 
 module.exports.getUserInfo = (req, res, next) => {
-  const userId = req.body._id
-  console.log(req.body)
+  const userId = req.user._id
 
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        return next(new Error('Пользователь по указанному _id не найден.', 404))
+        return next(new MissUserError(missUserErrorMessage))
       }
       return res.status(200).send({ data: user })
     })
@@ -36,7 +45,7 @@ module.exports.register = (req, res, next) => {
   } = req.body
 
   if (!email && !password) {
-    return next(new Error('Переданы неправильные почта или пароль.', 400))
+    return next(new UserDataError(userDataErrorMessage))
   }
 
   return bcrypt.hash(password, 10)
@@ -53,19 +62,19 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body
 
   if (!email && !password) {
-    return next(new Error('Переданы неправильные почта или пароль.', 400))
+    return next(new UserDataError(userDataErrorMessage))
   }
 
   return User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return res.status(400).send({ message: 'Пользователь с указанным логином и паролем не найден.' })
+        return next(new MissDataError(missDataErrorMessage))
       }
 
       return bcrypt.compare(password, user.password)
         .then((check) => {
           if (!check) {
-            return next(new Error('Переданы неправильные почта или пароль.', 400))
+            return next(new UserDataError(userDataErrorMessage))
           }
           const token = jwt.sign(
             { _id: user._id },
@@ -79,10 +88,10 @@ module.exports.login = (req, res, next) => {
             sameSite: true
           })
             .status(200)
-            .send({ message: 'Вход выполнен успешно!' })
+            .send({ message: loginSuccessfulMessage })
         })
     })
     .catch((err) => next(err))
 }
 
-module.exports.logout = (req, res, next) => res.clearCookie('token').status(200).send({ message: 'Вы вышли из аккаунта!' })
+module.exports.logout = (req, res, next) => res.clearCookie('token').status(200).send({ message: logoutMessage })

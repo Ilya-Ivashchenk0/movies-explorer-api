@@ -1,9 +1,10 @@
 const router = require('express').Router()
 const auth = require('../middlewares/auth')
 const { register, login, logout } = require('../controllers/users')
+const { validateLogin, validateUser } = require('../middlewares/validation')
 
-router.post('/signup', register)
-router.post('/signin', login)
+router.post('/signup', validateUser, register)
+router.post('/signin', validateLogin, login)
 
 router.use(auth)
 
