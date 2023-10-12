@@ -3,7 +3,6 @@ const LostMovieError = require('../errors/lost-movie-error')
 const MissDataError = require('../errors/miss-data-error')
 const MissUserError = require('../errors/miss-user-error')
 const UserDataError = require('../errors/user-data-error')
-const DefaultError = require('../errors/default-error')
 
 const {
   defaultErrorMessage,
@@ -13,14 +12,8 @@ const {
 } = require('../utils/constsMessages')
 
 module.exports = (err, req, res, next) => {
-  console.log(err)
   let statusCode = 500
   let message = defaultErrorMessage
-
-  if (err instanceof DefaultError) {
-    statusCode = err.statusCode
-    message = err.message
-  }
 
   if (err instanceof DeleteMovieError) {
     statusCode = err.statusCode
