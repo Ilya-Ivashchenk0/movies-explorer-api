@@ -10,7 +10,7 @@ const cors = () => {
   }
 
   return {
-    origin: 'https://ilya-mesto.nomoredomainsrocks.ru', // разрешенные домены
+    origin: 'movie.explorer.nomoredomainsroc.nomoredomainsrocks.ru', // разрешенные домены
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'], // разрешенные методы
     credentials: true
   }
