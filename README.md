@@ -5,8 +5,8 @@
 
 ## Ссылки на проект
 
-<!-- IP-адрес 158.160.121.188 -->
+IP-адрес 51.250.9.236
 
-<!-- Frontend https://ilya-mesto.nomoredomainsrocks.ru/ -->
+Backend https://api.movie.explorer.nomoredomainsrocks.ru
 
-<!-- Backend https://api.ilya-mesto.nomoredomainsrocks.ru/ -->
+Frontend https://movie.explorer.nomoredomainsrocks.ru
