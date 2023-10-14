@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const auth = require('../middlewares/auth')
-const { register, login, logout } = require('../controllers/users')
+const { register, login, signout } = require('../controllers/users')
 const { validateLogin, validateRegister } = require('../middlewares/validation')
 const NotFoundError = require('../errors/NotFoundError')
 const { LostRouteErrorMessage } = require('../utils/errorMessages')
@@ -10,7 +10,7 @@ router.post('/signin', validateLogin, login)
 
 router.use(auth)
 
-router.delete('/logout', logout)
+router.delete('/signout', signout)
 
 router.use('/users', require('./users'))
 router.use('/movies', require('./movies'))

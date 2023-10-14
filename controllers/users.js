@@ -4,6 +4,7 @@ const User = require('../models/user')
 const { jwtToken } = require('../utils/checkProd')
 const BadRequestError = require('../errors/BadRequestError')
 const NotFoundError = require('../errors/NotFoundError')
+const UnauthorizedError = require('../errors/UnauthorizedError')
 const {
   LoginSuccessfulMessage,
   BadRequestErrorMessage,
@@ -61,19 +62,19 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body
 
   if (!email && !password) {
-    throw new BadRequestError(BadRequestErrorMessage)
+    throw new UnauthorizedError(BadRequestErrorMessage)
   }
 
   return User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new NotFoundError(NotFoundErrorMessage)
+        throw new UnauthorizedError(BadRequestErrorMessage)
       }
 
       return bcrypt.compare(password, user.password)
         .then((check) => {
           if (!check) {
-            throw new BadRequestError(BadRequestErrorMessage)
+            throw new UnauthorizedError(BadRequestErrorMessage)
           }
           const token = jwt.sign(
             { _id: user._id },
@@ -93,4 +94,4 @@ module.exports.login = (req, res, next) => {
     .catch(next)
 }
 
-module.exports.logout = (req, res, next) => res.clearCookie('token').status(200).send({ message: LogoutMessage })
+module.exports.signout = (req, res, next) => res.clearCookie('token').status(200).send({ message: LogoutMessage })

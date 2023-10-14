@@ -2,16 +2,14 @@ const { celebrate, Joi, Segments } = require('celebrate')
 
 const validateLogin = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email().min(2)
-      .max(30),
+    email: Joi.string().required().email(),
     password: Joi.string().required()
   })
 })
 
 const validateRegister = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email().min(2)
-      .max(30),
+    email: Joi.string().required().email(),
     name: Joi.string().required().min(2).max(30),
     password: Joi.string().required()
   })
@@ -19,8 +17,7 @@ const validateRegister = celebrate({
 
 const validatePatchUser = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email().min(2)
-      .max(30),
+    email: Joi.string().required().email(),
     name: Joi.string().required().min(2).max(30)
   })
 })
