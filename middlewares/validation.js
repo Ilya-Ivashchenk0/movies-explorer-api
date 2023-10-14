@@ -1,10 +1,27 @@
 const { celebrate, Joi, Segments } = require('celebrate')
 
-const validateUser = celebrate({
+const validateLogin = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().min(2).max(30),
+    email: Joi.string().required().email().min(2)
+      .max(30),
+    password: Joi.string().required()
+  })
+})
+
+const validateRegister = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email().min(2)
+      .max(30),
     name: Joi.string().required().min(2).max(30),
-    password: Joi.string().required().min(8)
+    password: Joi.string().required()
+  })
+})
+
+const validatePatchUser = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email().min(2)
+      .max(30),
+    name: Joi.string().required().min(2).max(30)
   })
 })
 
@@ -24,29 +41,16 @@ const validateNewMovie = celebrate({
   })
 })
 
-const validateLogin = celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().min(2).max(30),
-    password: Joi.string().required().min(8)
-  })
-})
-
 const validateMovieId = celebrate({
   [Segments.PARAMS]: Joi.object().keys({
     movieId: Joi.string().hex().length(24).required()
   })
 })
 
-const validateUserInfo = celebrate({
-  body: Joi.object().keys({
-    userId: Joi.string().hex().length(24).required()
-  })
-})
-
 module.exports = {
-  validateUser,
+  validateRegister,
   validateNewMovie,
   validateLogin,
   validateMovieId,
-  validateUserInfo
+  validatePatchUser
 }

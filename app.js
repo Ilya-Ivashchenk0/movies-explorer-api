@@ -20,14 +20,14 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(helmet)
 app.use(rateLimit)
-app.use(cors)
 app.use(requestLogger)
+app.use(cors)
 app.use(loggs)
 
 app.use('/', require('./routes'))
 
 app.use(errors())
-app.use(centralErrors)
 app.use(errorLogger)
+app.use(centralErrors)
 
 app.listen(PORT, () => console.log(`\x1b[95mServer started && listening on:\x1b[0m \x1b[94m${baseUrl}\x1b[0m`))

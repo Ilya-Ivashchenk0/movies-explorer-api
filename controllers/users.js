@@ -1,16 +1,15 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
-const UserDataError = require('../errors/user-data-error')
-const MissDataError = require('../errors/miss-data-error')
-const MissUserError = require('../errors/miss-user-error')
+const { jwtToken } = require('../utils/checkProd')
+const BadRequestError = require('../errors/BadRequestError')
+const NotFoundError = require('../errors/NotFoundError')
 const {
-  userDataErrorMessage,
-  loginSuccessfulMessage,
-  missDataErrorMessage,
-  missUserErrorMessage,
-  logoutMessage
-} = require('../utils/constsMessages')
+  LoginSuccessfulMessage,
+  BadRequestErrorMessage,
+  NotFoundErrorMessage,
+  LogoutMessage
+} = require('../utils/errorMessages')
 
 module.exports.getUserInfo = (req, res, next) => {
   const userId = req.user._id
@@ -18,11 +17,11 @@ module.exports.getUserInfo = (req, res, next) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        throw new MissUserError(missUserErrorMessage)
+        throw new NotFoundError(NotFoundErrorMessage)
       }
       return res.status(200).send({ data: user })
     })
-    .catch((err) => next(err))
+    .catch(next)
 }
 
 module.exports.updateUserInfo = (req, res, next) => {
@@ -34,7 +33,7 @@ module.exports.updateUserInfo = (req, res, next) => {
     { new: true, runValidators: true }
   )
     .then((user) => res.send({ data: user }))
-    .catch((err) => next(err))
+    .catch(next)
 }
 
 module.exports.register = (req, res, next) => {
@@ -45,7 +44,7 @@ module.exports.register = (req, res, next) => {
   } = req.body
 
   if (!email && !password) {
-    throw new UserDataError(userDataErrorMessage)
+    throw new BadRequestError(BadRequestErrorMessage)
   }
 
   return bcrypt.hash(password, 10)
@@ -55,30 +54,30 @@ module.exports.register = (req, res, next) => {
       name
     }))
     .then((user) => res.status(201).send({ _id: user._id, email: user.email }))
-    .catch((err) => next(err))
+    .catch(next)
 }
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body
 
   if (!email && !password) {
-    return next(new UserDataError(userDataErrorMessage))
+    throw new BadRequestError(BadRequestErrorMessage)
   }
 
   return User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new MissDataError(missDataErrorMessage)
+        throw new NotFoundError(NotFoundErrorMessage)
       }
 
       return bcrypt.compare(password, user.password)
         .then((check) => {
           if (!check) {
-            throw new UserDataError(userDataErrorMessage)
+            throw new BadRequestError(BadRequestErrorMessage)
           }
           const token = jwt.sign(
             { _id: user._id },
-            process.env.JWT_SECRET,
+            jwtToken,
             { expiresIn: '7d' }
           )
 
@@ -88,10 +87,10 @@ module.exports.login = (req, res, next) => {
             sameSite: true
           })
             .status(200)
-            .send({ message: loginSuccessfulMessage })
+            .send({ message: LoginSuccessfulMessage })
         })
     })
-    .catch((err) => next(err))
+    .catch(next)
 }
 
-module.exports.logout = (req, res, next) => res.clearCookie('token').status(200).send({ message: logoutMessage })
+module.exports.logout = (req, res, next) => res.clearCookie('token').status(200).send({ message: LogoutMessage })

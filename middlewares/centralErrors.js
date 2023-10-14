@@ -1,58 +1,57 @@
-const DeleteMovieError = require('../errors/delete-movie-error')
-const LostMovieError = require('../errors/lost-movie-error')
-const MissDataError = require('../errors/miss-data-error')
-const MissUserError = require('../errors/miss-user-error')
-const UserDataError = require('../errors/user-data-error')
+const BadRequestError = require('../errors/BadRequestError')
+const ForbiddenError = require('../errors/ForbiddenError')
+const NotFoundError = require('../errors/NotFoundError')
+const UnauthorizedError = require('../errors/UnauthorizedError')
 
 const {
-  defaultErrorMessage,
-  dublicateEmailMessage,
-  dataErrorMessage,
-  missUserErrorMessage
-} = require('../utils/constsMessages')
+  InternalServerErrorMessage,
+  DublicateEmailErrorMessage,
+  ValidationErrorMessage,
+  NotFoundErrorMessage
+} = require('../utils/errorMessages')
 
 module.exports = (err, req, res, next) => {
   let statusCode = 500
-  let message = defaultErrorMessage
+  let message = InternalServerErrorMessage
 
-  if (err instanceof DeleteMovieError) {
+  if (err instanceof BadRequestError) {
     statusCode = err.statusCode
     message = err.message
   }
 
-  if (err instanceof LostMovieError) {
+  if (err instanceof ForbiddenError) {
     statusCode = err.statusCode
     message = err.message
   }
 
-  if (err instanceof MissDataError) {
+  if (err instanceof BadRequestError) {
     statusCode = err.statusCode
     message = err.message
   }
 
-  if (err instanceof MissUserError) {
+  if (err instanceof NotFoundError) {
     statusCode = err.statusCode
     message = err.message
   }
 
-  if (err instanceof UserDataError) {
+  if (err instanceof UnauthorizedError) {
     statusCode = err.statusCode
     message = err.message
   }
 
   if (err.code === 11000) {
     statusCode = 409
-    message = dublicateEmailMessage
+    message = DublicateEmailErrorMessage
   }
 
   if (err.name === 'ValidationError') {
     statusCode = 400
-    message = dataErrorMessage
+    message = ValidationErrorMessage
   }
 
   if (err.name === 'CastError') {
     statusCode = 400
-    message = missUserErrorMessage
+    message = NotFoundErrorMessage
   }
 
   res.status(statusCode).send({ message })

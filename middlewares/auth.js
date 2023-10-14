@@ -1,20 +1,21 @@
 const jwt = require('jsonwebtoken')
-const { authErrorMessage } = require('./validation')
-const AuthError = require('../errors/auth-error')
+const { UnauthorizedErrorMessage } = require('../utils/errorMessages')
+const UnauthorizedError = require('../errors/UnauthorizedError')
+const { jwtToken } = require('../utils/checkProd')
 
 module.exports = (req, res, next) => {
   const { token } = req.cookies
 
   if (!token) {
-    return next(new AuthError(authErrorMessage))
+    throw new UnauthorizedError(UnauthorizedErrorMessage)
   }
 
   let payload
 
   try {
-    payload = jwt.verify(token, process.env.JWT_SECRET)
+    payload = jwt.verify(token, jwtToken)
   } catch (e) {
-    return next(new AuthError(authErrorMessage))
+    throw new UnauthorizedError(UnauthorizedErrorMessage)
   }
 
   req.user = payload

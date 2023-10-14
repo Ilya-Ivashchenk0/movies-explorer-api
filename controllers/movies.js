@@ -1,14 +1,14 @@
 const Movie = require('../models/movie')
-const DeleteMovieError = require('../errors/delete-movie-error')
-const LostMovieError = require('../errors/delete-movie-error')
-const { deleteErrorMessage, lostMovieMessage, deletedMovieMessage } = require('../utils/constsMessages')
+const ForbiddenError = require('../errors/ForbiddenError')
+const NotFoundError = require('../errors/NotFoundError')
+const { ForbiddenErrorMessage, LostMovieMessage, DeletedMovieMessage } = require('../utils/errorMessages')
 
 module.exports.getAllMovies = (req, res, next) => {
   const userId = req.user._id
 
   Movie.find({ owner: userId })
     .then((movies) => res.send(movies))
-    .catch((err) => next(err))
+    .catch(next)
 }
 
 module.exports.postNewMovie = (req, res, next) => {
@@ -42,7 +42,7 @@ module.exports.postNewMovie = (req, res, next) => {
     nameEN
   })
     .then((movie) => res.send(movie))
-    .catch((err) => next(err))
+    .catch(next)
 }
 
 module.exports.deleteMovieById = (req, res, next) => {
@@ -52,16 +52,16 @@ module.exports.deleteMovieById = (req, res, next) => {
   Movie.findById(movieId)
     .then((movie) => {
       if (!movie) {
-        throw new LostMovieError(lostMovieMessage)
+        throw new NotFoundError(LostMovieMessage)
       }
 
       if (movie.owner.toString() !== userId) {
-        throw new DeleteMovieError(deleteErrorMessage)
+        throw new ForbiddenError(ForbiddenErrorMessage)
       }
 
       Movie.findByIdAndDelete(movieId)
-        .then(() => res.send({ message: deletedMovieMessage }))
-        .catch((err) => next(err))
+        .then(() => res.send({ message: DeletedMovieMessage }))
+        .catch(next)
     })
-    .catch((err) => next(err))
+    .catch(next)
 }
