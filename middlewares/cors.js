@@ -10,7 +10,7 @@ const cors = () => {
   }
 
   return {
-    origin: 'movie.explorer.nomoredomainsrocks.ru', // разрешенные домены
+    origin: 'https://movie.explorer.nomoredomainsrocks.ru', // разрешенные домены
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'], // разрешенные методы
     credentials: true
   }
