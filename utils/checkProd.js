@@ -7,7 +7,7 @@ const baseUrl = () => {
 
 const dbUrl = () => {
   if (process.env.NODE_ENV !== 'production') {
-    return 'mongodb://localhost:27017/bitfilmsdb'
+    return 'mongodb://127.0.0.1:27017/bitfilmsdb'
   }
   return process.env.DB_URL
 }
