@@ -7,8 +7,6 @@
 
 ## Ссылки на проект
 
-IP-адрес 51.250.9.236
+Backend https://movies-explorer-api.test-tasks.ru
 
-Backend https://api.movie.explorer.nomoredomainsrocks.ru
-
-Frontend https://movie.explorer.nomoredomainsrocks.ru
+Frontend https://movies-explorer-frontend.test-tasks.ru
