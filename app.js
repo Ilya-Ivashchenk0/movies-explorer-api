@@ -30,4 +30,4 @@ app.use(errorLogger)
 app.use(errors())
 app.use(centralErrors)
 
-app.listen(PORT, () => console.log(`\x1b[95mServer started && listening on:\x1b[0m \x1b[94m${baseUrl}\x1b[0m`))
+app.listen(PORT, () => console.log(`\x1b[95mServer started && listening on:\x1b[0m\x1b[94m ${baseUrl} \x1b[0m`))
