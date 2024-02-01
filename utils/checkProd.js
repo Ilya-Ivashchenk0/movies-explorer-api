@@ -1,8 +1,8 @@
 const baseUrl = () => {
   if (process.env.NODE_ENV !== 'production') {
-    return 'http://localhost:3000'
+    return 'http://localhost:3500'
   }
-  return 'https://api.ilya-mesto.nomoredomainsrocks.ru'
+  return 'https://movies-explorer-api.test-tasks.ru'
 }
 
 const dbUrl = () => {

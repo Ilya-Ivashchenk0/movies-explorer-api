@@ -12,7 +12,7 @@ const helmet = require('./middlewares/helmet')
 const rateLimit = require('./middlewares/rateLimit')
 const { requestLogger, errorLogger } = require('./middlewares/logger')
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3500
 
 const app = express()
 app.use(bodyParser.json())
